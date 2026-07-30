@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>拾光記帳 - 靜謐莫蘭迪個人財務紀錄</title>
+  
+  <!-- Google Fonts: Outfit, Plus Jakarta Sans, Noto Serif TC -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Chart.js for Data Visualization -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- jsQR & Tesseract.js for Invoice & Receipt Recognition -->
+  <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+  
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Main Layout -->
+  <div class="app-container">
+    
+    <!-- Top Header -->
+    <header class="app-header">
+      <div class="header-brand">
+        <div class="brand-icon">
+          <i class="fa-solid fa-seedling"></i>
+        </div>
+        <div>
+          <h1>拾光記帳 <span>SageExpense</span></h1>
+          <p class="brand-subtitle">靜謐草木綠 ‧ 常態與變動支出整理 ‧ 80%預算告警</p>
+        </div>
+      </div>
+      
+      <div class="header-actions">
+        <button id="btn-scan-invoice" class="btn btn-secondary">
+          <i class="fa-solid fa-camera"></i> 發票辨識
+        </button>
+        <button id="btn-add-manual" class="btn btn-primary">
+          <i class="fa-solid fa-plus"></i> 新增帳目
+        </button>
+      </div>
+    </header>
+
+    <!-- Desktop Navigation Tabs Menu -->
+    <nav class="desktop-tabs">
+      <button class="tab-btn active" data-tab="tab-dashboard">
+        <i class="fa-solid fa-feather"></i> 首頁記帳
+      </button>
+      <button class="tab-btn" data-tab="tab-category-analysis">
+        <i class="fa-solid fa-chart-pie"></i> 分類分析
+      </button>
+      <button class="tab-btn" data-tab="tab-charts">
+        <i class="fa-solid fa-chart-column"></i> 統計圖表
+      </button>
+      <button class="tab-btn" data-tab="tab-settings">
+        <i class="fa-solid fa-sliders"></i> 設定與備份
+      </button>
+    </nav>
+
+    <!-- ===================================================================
+         TAB 1: 首頁記帳 (Dashboard & Rapid Entry)
+         =================================================================== -->
+    <main id="tab-dashboard" class="tab-content active">
+      
+      <!-- Metrics Summary Cards -->
+      <section class="metrics-grid">
+        <!-- Income Card -->
+        <div class="metric-card metric-income">
+          <div class="metric-icon"><i class="fa-solid fa-arrow-up"></i></div>
+          <div class="metric-info">
+            <span class="metric-title">本月總收入</span>
+            <h2 id="metric-total-income">NT$ 0</h2>
+            <span class="metric-sub">薪資、獎金與副業</span>
+          </div>
+        </div>
+
+        <!-- Expense Card -->
+        <div class="metric-card metric-expense">
+          <div class="metric-icon"><i class="fa-solid fa-arrow-down"></i></div>
+          <div class="metric-info">
+            <span class="metric-title">本月總支出</span>
+            <h2 id="metric-total-expense">NT$ 0</h2>
+            <div class="expense-breakdown">
+              <span id="metric-fixed-expense">固定: $0</span>
+              <span class="divider">|</span>
+              <span id="metric-var-expense">變動: $0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Net Balance Card -->
+        <div class="metric-card metric-balance">
+          <div class="metric-icon"><i class="fa-solid fa-wallet"></i></div>
+          <div class="metric-info">
+            <span class="metric-title">本月淨結餘</span>
+            <h2 id="metric-net-balance">NT$ 0</h2>
+            <span class="metric-sub" id="metric-savings-rate">儲蓄率 0%</span>
+          </div>
+        </div>
+
+        <!-- Budget Utilization Card -->
+        <div class="metric-card metric-budget">
+          <div class="metric-icon"><i class="fa-solid fa-shield-heart"></i></div>
+          <div class="metric-info">
+            <div class="metric-header-row">
+              <span class="metric-title">預算進度</span>
+              <span id="budget-status-badge" class="badge badge-success">✅ 正常</span>
+            </div>
+            <h2 id="metric-budget-percent">0%</h2>
+            <div class="progress-bar-bg">
+              <div id="metric-budget-bar" class="progress-bar-fill" style="width: 0%;"></div>
+            </div>
+            <span class="metric-sub" id="metric-budget-amount">已花費 $0 / 總預算 $0</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- AI Natural Language Rapid Entry -->
+      <section class="ai-input-section">
+        <div class="ai-input-card">
+          <div class="ai-input-header">
+            <div class="ai-badge">
+              <i class="fa-solid fa-wand-magic-sparkles"></i> 快捷語意記帳
+            </div>
+            <span class="ai-tip">對話式輸入，自動拆解並分類帶入！</span>
+          </div>
+          
+          <div class="ai-input-box">
+            <input type="text" id="ai-text-input" placeholder="例如：今天午餐 150，搭計程車 220，訂閱 Netflix 390">
+            <button id="btn-ai-parse" class="btn btn-ai">
+              <i class="fa-solid fa-bolt"></i> 解析匯入
+            </button>
+          </div>
+          
+          <div class="quick-chips">
+            <span class="chip-label">一鍵試用：</span>
+            <button class="chip" data-text="今天午餐 150，搭計程車 220，訂閱 Netflix 390">
+              🍱 午餐+計程車+Netflix
+            </button>
+            <button class="chip" data-text="水電費 1850 轉帳，全聯日用品 650 LINE Pay">
+              ⚡ 水電+全聯採買
+            </button>
+            <button class="chip" data-text="薪資 55000，保險費 12000 信用卡">
+              💰 薪資+保險年繳
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Transactions List Section -->
+      <section class="section-card">
+        <div class="transactions-header">
+          <div class="header-left-row">
+            <div class="header-left">
+              <h2><i class="fa-solid fa-list"></i> 近期收支明細</h2>
+              <span id="transaction-count-badge" class="count-badge">共 0 筆紀錄</span>
+            </div>
+            
+            <!-- Batch Action Bar -->
+            <div id="batch-action-bar" class="batch-action-bar" style="display: none;">
+              <span id="batch-selected-count">已選擇 0 筆</span>
+              <button id="btn-batch-delete" class="btn btn-danger-sm">
+                <i class="fa-solid fa-trash-can"></i> 批量刪除已勾選
+              </button>
+            </div>
+          </div>
+          
+          <!-- Filter Bar -->
+          <div class="filter-toolbar">
+            <div class="search-box">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="text" id="filter-search" placeholder="搜尋描述或分類...">
+            </div>
+            
+            <select id="filter-type">
+              <option value="all">所有收支類型</option>
+              <option value="income">僅收入</option>
+              <option value="expense-fixed">僅固定支出</option>
+              <option value="expense-variable">僅變動支出</option>
+            </select>
+
+            <select id="filter-category">
+              <option value="all">所有類別</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Transactions Table -->
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th style="width: 40px; text-align: center;">
+                  <input type="checkbox" id="chk-select-all" title="全選/取消全選">
+                </th>
+                <th>日期</th>
+                <th>類型</th>
+                <th>屬性</th>
+                <th>分類</th>
+                <th>描述 / 商家</th>
+                <th>金額 (NT$)</th>
+                <th>支付管道</th>
+                <th style="text-align: center;">操作選項</th>
+              </tr>
+            </thead>
+            <tbody id="transactions-table-body">
+              <!-- Rendered by JS -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <!-- ===================================================================
+         TAB 2: 分類分析 (Monthly Category Expense Analysis)
+         =================================================================== -->
+    <main id="tab-category-analysis" class="tab-content">
+      <section class="section-card">
+        <div class="section-header">
+          <div>
+            <h2><i class="fa-solid fa-chart-pie"></i> 每月類別支出與預算監控</h2>
+            <p>即時追蹤各類別消費佔比與預算使用率（80% 黃色預警 / 100% 紅色超額）</p>
+          </div>
+          <button id="btn-edit-budgets-tab2" class="btn btn-sm btn-outline">
+            <i class="fa-solid fa-gear"></i> 設定預算額度
+          </button>
+        </div>
+
+        <div id="category-summary-cards" class="cat-analysis-grid">
+          <!-- Rendered by JS -->
+        </div>
+
+        <div id="budget-cards-container" class="budget-cards-grid">
+          <!-- Rendered by JS -->
+        </div>
+      </section>
+    </main>
+
+    <!-- ===================================================================
+         TAB 3: 統計圖表 (Visual Analytics & Charts)
+         =================================================================== -->
+    <main id="tab-charts" class="tab-content">
+      <div class="charts-grid">
+        <div class="section-card chart-card">
+          <div class="chart-header">
+            <h3><i class="fa-solid fa-chart-line"></i> 每日花費趨勢圖</h3>
+            <span class="chart-subtitle">本月每日變動與固定支出變化軌跡</span>
+          </div>
+          <div class="chart-wrapper">
+            <canvas id="chart-daily-trend"></canvas>
+          </div>
+        </div>
+
+        <div class="section-card chart-card">
+          <div class="chart-header">
+            <h3><i class="fa-solid fa-chart-column"></i> 固定支出 vs 變動支出</h3>
+            <span class="chart-subtitle">常態固定開銷與日常變動花費比例</span>
+          </div>
+          <div class="chart-wrapper">
+            <canvas id="chart-fixed-vs-var"></canvas>
+          </div>
+        </div>
+
+        <div class="section-card chart-card">
+          <div class="chart-header">
+            <h3><i class="fa-solid fa-chart-pie"></i> 各支出類別佔比分析</h3>
+            <span class="chart-subtitle">月度花費結構分布占比</span>
+          </div>
+          <div class="chart-wrapper">
+            <canvas id="chart-category-pie"></canvas>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- ===================================================================
+         TAB 4: 設定與備份 (Settings & CSV Backup)
+         =================================================================== -->
+    <main id="tab-settings" class="tab-content">
+      <div class="settings-grid">
+        <!-- 1. CSV Backup section -->
+        <section class="section-card">
+          <div class="section-header">
+            <h2><i class="fa-solid fa-file-csv"></i> CSV 資料備份與還原</h2>
+            <p>您可以將記帳資料隨時匯出備份，或從 CSV 檔案恢復歷史帳目</p>
+          </div>
+          <div class="settings-action-row">
+            <button id="btn-export-csv" class="btn btn-primary">
+              <i class="fa-solid fa-file-export"></i> 匯出 CSV 備份檔
+            </button>
+            <label for="input-import-csv" class="btn btn-outline" style="cursor: pointer;">
+              <i class="fa-solid fa-file-import"></i> 匯入 CSV 恢復資料
+            </label>
+            <input type="file" id="input-import-csv" accept=".csv" style="display: none;">
+          </div>
+        </section>
+
+        <!-- 2. Budget limits section -->
+        <section class="section-card">
+          <div class="section-header">
+            <h2><i class="fa-solid fa-sliders"></i> 各類別預算額度設定</h2>
+            <p>自訂每月各項花費上限金額</p>
+          </div>
+          <form id="form-settings-budgets">
+            <div id="settings-budget-list" class="budget-inputs-list"></div>
+            <div style="margin-top: 16px;">
+              <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> 儲存預算設定</button>
+            </div>
+          </form>
+        </section>
+
+        <!-- 3. Danger Zone: Bottom Reset section (放在最底部，避免誤觸) -->
+        <section class="section-card danger-card">
+          <div class="section-header">
+            <h2><i class="fa-solid fa-triangle-exclamation" style="color: var(--expense-color);"></i> 清空所有記帳資料 (危險區域)</h2>
+            <p>您可以點擊此處清除所有記帳紀錄，重新開始記錄</p>
+          </div>
+          <div class="settings-action-row">
+            <button id="btn-clear-all" class="btn btn-danger-sm" style="padding: 10px 20px;">
+              <i class="fa-solid fa-trash-can"></i> 一鍵清空所有紀錄
+            </button>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <p>© 2026 拾光記帳 SageExpense ‧ 靜謐莫蘭迪個人財務紀錄</p>
+    </footer>
+  </div>
+
+  <!-- Mobile Bottom Nav -->
+  <nav class="mobile-nav">
+    <button class="mobile-nav-btn active" data-tab="tab-dashboard">
+      <i class="fa-solid fa-feather"></i>
+      <span>首頁記帳</span>
+    </button>
+    <button class="mobile-nav-btn" data-tab="tab-category-analysis">
+      <i class="fa-solid fa-chart-pie"></i>
+      <span>分類分析</span>
+    </button>
+    <button id="mobile-fab-add" class="mobile-fab" title="新增記帳">
+      <i class="fa-solid fa-plus"></i>
+    </button>
+    <button class="mobile-nav-btn" data-tab="tab-charts">
+      <i class="fa-solid fa-chart-column"></i>
+      <span>統計圖表</span>
+    </button>
+    <button class="mobile-nav-btn" data-tab="tab-settings">
+      <i class="fa-solid fa-gear"></i>
+      <span>設定備份</span>
+    </button>
+  </nav>
+
+  <!-- Modal 1: Add/Edit Transaction -->
+  <div id="modal-transaction" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modal-title"><i class="fa-solid fa-pen-to-square"></i> 新增帳目紀錄</h3>
+        <button class="btn-close-modal">&times;</button>
+      </div>
+      <form id="form-transaction">
+        <input type="hidden" id="tx-id">
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="tx-type">收支類型</label>
+            <select id="tx-type" required>
+              <option value="expense">支出 (Expense)</option>
+              <option value="income">收入 (Income)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="tx-nature">支出屬性</label>
+            <select id="tx-nature">
+              <option value="variable">變動支出 (日常開銷)</option>
+              <option value="fixed-monthly">固定支出 (月繳固定)</option>
+              <option value="fixed-bimonthly">固定支出 (雙月繳不固定)</option>
+              <option value="fixed-yearly">固定支出 (年繳項目)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="tx-category">分類項目</label>
+            <select id="tx-category" required></select>
+          </div>
+
+          <div class="form-group">
+            <label for="tx-amount">金額 (NT$)</label>
+            <input type="number" id="tx-amount" min="1" step="1" placeholder="例如：150" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="tx-date">日期</label>
+            <input type="date" id="tx-date" required>
+          </div>
+
+          <div class="form-group">
+            <label for="tx-payment">支付管道</label>
+            <select id="tx-payment" required>
+              <option value="現金">💵 現金</option>
+              <option value="信用卡">💳 信用卡</option>
+              <option value="LINE Pay">📱 LINE Pay</option>
+              <option value="銀行轉帳">🏦 銀行轉帳</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="tx-description">項目描述 / 商家</label>
+          <input type="text" id="tx-description" placeholder="例如：全聯採買、午餐便當" required>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-close-modal">取消</button>
+          <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> 儲存</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 2: Invoice Scanner -->
+  <div id="modal-scanner" class="modal">
+    <div class="modal-content modal-scanner-content">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-receipt"></i> 上傳發票 / 收據圖片辨識</h3>
+        <button class="btn-close-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div id="drop-zone" class="drop-zone">
+          <i class="fa-solid fa-camera drop-icon"></i>
+          <h4>點擊選擇照片或拖放發票圖檔</h4>
+          <p>支援發票照片或載具截圖</p>
+          <input type="file" id="file-invoice" accept="image/*" style="display: none;">
+        </div>
+
+        <div id="scan-preview-container" class="scan-preview-container" style="display: none;">
+          <div class="scanner-screen">
+            <img id="scanned-image-preview" src="" alt="發票預覽">
+            <div class="laser-beam"></div>
+          </div>
+          <div class="scan-status">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+            <span id="scan-status-text">AI 正在辨識發票商家與金額...</span>
+          </div>
+        </div>
+
+        <div id="ocr-result-box" class="ocr-result-box" style="display: none;">
+          <div class="result-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <h4 style="margin: 0; font-size: 0.95rem;"><i class="fa-solid fa-circle-check" style="color: #4a6b5d;"></i> 辨識完成！請核對並可隨時修改：</h4>
+            <span id="ocr-method-badge" class="badge badge-success" style="font-size: 0.75rem;">QR Code 辨識</span>
+          </div>
+          <div class="ocr-fields-edit" style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="form-group" style="margin: 0;">
+              <label for="ocr-merchant-input" style="font-size: 0.8rem; font-weight: 600; color: #5c6b64;">商家 / 描述</label>
+              <input type="text" id="ocr-merchant-input" style="padding: 8px 12px; font-size: 0.88rem; border: 1px solid #cad8d0; border-radius: 6px;">
+            </div>
+            <div class="form-row" style="margin: 0; gap: 10px;">
+              <div class="form-group" style="margin: 0;">
+                <label for="ocr-date-input" style="font-size: 0.8rem; font-weight: 600; color: #5c6b64;">日期</label>
+                <input type="date" id="ocr-date-input" style="padding: 8px 12px; font-size: 0.88rem; border: 1px solid #cad8d0; border-radius: 6px;">
+              </div>
+              <div class="form-group" style="margin: 0;">
+                <label for="ocr-amount-input" style="font-size: 0.8rem; font-weight: 600; color: #5c6b64;">總金額 (NT$)</label>
+                <input type="number" id="ocr-amount-input" min="0" step="1" style="padding: 8px 12px; font-size: 0.88rem; border: 1px solid #cad8d0; border-radius: 6px;">
+              </div>
+            </div>
+            <div class="form-row" style="margin: 0; gap: 10px;">
+              <div class="form-group" style="margin: 0;">
+                <label for="ocr-category-select" style="font-size: 0.8rem; font-weight: 600; color: #5c6b64;">分類項目</label>
+                <select id="ocr-category-select" style="padding: 8px 12px; font-size: 0.88rem; border: 1px solid #cad8d0; border-radius: 6px;"></select>
+              </div>
+              <div class="form-group" style="margin: 0;">
+                <label for="ocr-payment-select" style="font-size: 0.8rem; font-weight: 600; color: #5c6b64;">支付管道</label>
+                <select id="ocr-payment-select" style="padding: 8px 12px; font-size: 0.88rem; border: 1px solid #cad8d0; border-radius: 6px;">
+                  <option value="現金">💵 現金</option>
+                  <option value="信用卡">💳 信用卡</option>
+                  <option value="LINE Pay">📱 LINE Pay</option>
+                  <option value="銀行轉帳">🏦 銀行轉帳</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-close-modal">取消</button>
+        <button type="button" id="btn-confirm-ocr" class="btn btn-primary" style="display: none;">
+          <i class="fa-solid fa-check"></i> 確認匯入
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

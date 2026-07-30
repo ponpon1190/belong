@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>盛夏 HSC 字幕</title>
+  </head>
+  <body>
+    <div
+      data-composition-id="summer-hsc-subtitles"
+      data-start="0"
+      data-duration="8"
+      data-width="1080"
+      data-height="1920"
+    >
+      <video id="source-video" data-start="0" data-duration="8" data-track-index="0" src="input.mp4" muted playsinline></video>
+      <audio id="source-audio" data-start="0" data-duration="8" data-track-index="2" src="input.mp4" data-volume="1"></audio>
+
+      <!-- HSC Hook: 0–2 seconds -->
+      <div id="caption-hook" class="caption" data-start="0" data-duration="2" data-track-index="1">盛夏 重新定義</div>
+      <!-- HSC Show: 2–6 seconds -->
+      <div id="caption-show" class="caption" data-start="2" data-duration="4" data-track-index="1">手沖 + 西西里檸檬</div>
+      <!-- HSC Call: 6–8 seconds -->
+      <div id="caption-call" class="caption" data-start="6" data-duration="2" data-track-index="1">本週限定 立即購買</div>
+
+      <style>
+        [data-composition-id="summer-hsc-subtitles"] { width: 100%; height: 100%; overflow: hidden; background: #000; }
+        #source-video { width: 100%; height: 100%; object-fit: cover; }
+        .caption {
+          position: absolute;
+          left: 54px; right: 54px; bottom: 330px; z-index: 10;
+          box-sizing: border-box; text-align: center;
+          color: #fff; font-family: "Noto Sans TC", "Source Han Sans TC", sans-serif;
+          font-size: 56px; font-weight: 700; line-height: 1.35; letter-spacing: 0.01em;
+          -webkit-text-stroke: 2px rgba(0, 0, 0, 0.65);
+          paint-order: stroke fill;
+          text-shadow: 0 3px 10px rgba(0, 0, 0, 0.34);
+          opacity: 0;
+        }
+      </style>
+      <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+      <script>
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+        const groups = [
+          { id: "#caption-hook", start: 0, end: 2 },
+          { id: "#caption-show", start: 2, end: 6 },
+          { id: "#caption-call", start: 6, end: 8 }
+        ];
+        groups.forEach(function (group) {
+          tl.set(group.id, { opacity: 0, visibility: "visible" }, group.start);
+          tl.to(group.id, { opacity: 1, duration: 0.3, ease: "power2.out" }, group.start);
+          tl.to(group.id, { opacity: 0, duration: 0.3, ease: "power2.in" }, group.end - 0.3);
+          tl.set(group.id, { opacity: 0, visibility: "hidden" }, group.end);
+        });
+        window.__timelines["summer-hsc-subtitles"] = tl;
+      </script>
+    </div>
+  </body>
+</html>

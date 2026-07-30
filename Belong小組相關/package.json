@@ -1,0 +1,10 @@
+{
+  "name": "summer-reel-hsc-subtitles",
+  "private": true,
+  "scripts": {
+    "lint": "npx hyperframes lint",
+    "validate": "npx hyperframes validate",
+    "inspect": "npx hyperframes inspect --at 1,4,7",
+    "render": "npx hyperframes render --output output_with_subtitles.mp4 --quality high"
+  }
+}
