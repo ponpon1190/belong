@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Hope | BELONG 活動 CRM 自動化提案與營運範本</title>
+
+  <!-- Google Fonts: Plus Jakarta Sans & Noto Sans TC -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    :root {
+      --primary: #3f5d4a;
+      --primary-accent: #6f8f72;
+      --secondary: #8a6d4f;
+      --bg: #f7efe6;
+      --surface: #fcf8f2;
+      --surface-strong: #f2e8dc;
+      --surface-border: rgba(63, 93, 74, 0.16);
+      --text: #23363b;
+      --text-muted: #64706d;
+      --card-bg: rgba(255, 255, 255, 0.72);
+      --accent-blue: #7a9aa8;
+      --accent-rose: #ba8b74;
+      --shadow: 0 18px 45px rgba(35, 54, 59, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Noto Sans TC', 'Plus Jakarta Sans', sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(122, 154, 168, 0.16) 0, transparent 30%),
+        radial-gradient(circle at top right, rgba(186, 139, 116, 0.16) 0, transparent 28%),
+        linear-gradient(135deg, #fcf8f2 0%, #f4ebde 100%);
+      color: var(--text);
+      line-height: 1.7;
+      padding-bottom: 60px;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 40px;
+      background: rgba(252, 248, 242, 0.86);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--surface-border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 5px 20px rgba(35, 54, 59, 0.04);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .brand-badge {
+      background: linear-gradient(135deg, var(--primary-accent), var(--accent-blue));
+      color: white;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--primary);
+    }
+
+    .container {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 54px 0 36px;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(111, 143, 114, 0.14);
+      color: var(--primary);
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 0.84rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .hero h1 {
+      font-family: 'Noto Serif TC', 'Noto Sans TC', serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 14px;
+      line-height: 1.25;
+      letter-spacing: 0.01em;
+    }
+
+    .hero p {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      max-width: 760px;
+      margin: 0 auto 24px;
+    }
+
+    .hero-highlights {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .hero-pill {
+      background: var(--card-bg);
+      border: 1px solid var(--surface-border);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 0.9rem;
+      color: var(--primary);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-summary {
+      margin: 0 auto 30px;
+      max-width: 920px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(242, 232, 220, 0.95));
+      border: 1px solid var(--surface-border);
+      border-radius: 22px;
+      padding: 24px 26px;
+      box-shadow: var(--shadow);
+      text-align: left;
+    }
+
+    .hero-summary strong {
+      color: var(--primary);
+      font-size: 1rem;
+    }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 18px;
+      margin-bottom: 46px;
+    }
+
+    .metric-card {
+      background: var(--card-bg);
+      border: 1px solid var(--surface-border);
+      border-radius: 18px;
+      padding: 22px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
+    }
+
+    .metric-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: rgba(111, 143, 114, 0.15);
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      margin-bottom: 12px;
+    }
+
+    .metric-card.green .metric-icon {
+      background: rgba(138, 109, 79, 0.15);
+      color: var(--secondary);
+    }
+
+    .metric-card.yellow .metric-icon {
+      background: rgba(122, 154, 168, 0.16);
+      color: var(--accent-blue);
+    }
+
+    .metric-value {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .metric-label {
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .section-header {
+      margin-bottom: 18px;
+    }
+
+    .section-title {
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-subtitle {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-top: 4px;
+    }
+
+    .flow-playground {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.92), rgba(242, 232, 220, 0.96));
+      border: 1px solid var(--surface-border);
+      border-radius: 24px;
+      padding: 32px;
+      margin-bottom: 56px;
+      box-shadow: var(--shadow);
+    }
+
+    .flow-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 22px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .flow-play-btn {
+      background: linear-gradient(135deg, var(--primary), var(--primary-accent));
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 8px 20px rgba(63, 93, 74, 0.16);
+      transition: all 0.2s;
+    }
+
+    .flow-play-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .steps-bar {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 12px;
+      margin-bottom: 24px;
+      border-bottom: 1px solid var(--surface-border);
+    }
+
+    .step-node {
+      flex: 1;
+      min-width: 132px;
+      background: rgba(255, 255, 255, 0.6);
+      border: 1px solid var(--surface-border);
+      border-radius: 12px;
+      padding: 12px 14px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .step-node:hover, .step-node.active {
+      border-color: var(--primary-accent);
+      background: rgba(111, 143, 114, 0.12);
+      box-shadow: 0 8px 18px rgba(63, 93, 74, 0.1);
+    }
+
+    .step-node .step-day {
+      font-size: 0.76rem;
+      font-weight: 800;
+      color: var(--primary);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .step-node.active .step-day {
+      color: var(--primary);
+    }
+
+    .step-node .step-title {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-top: 4px;
+      white-space: nowrap;
+    }
+
+    .giant-card {
+      background: linear-gradient(135deg, #fdf9f2 0%, #f3e7da 100%);
+      border: 1px solid rgba(63, 93, 74, 0.16);
+      border-radius: 20px;
+      padding: 28px;
+      display: grid;
+      grid-template-columns: 1.15fr 0.95fr;
+      gap: 24px;
+      align-items: center;
+      position: relative;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+    }
+
+    @media (max-width: 900px) {
+      .giant-card {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card-left-badge {
+      display: inline-block;
+      background: rgba(111, 143, 114, 0.15);
+      color: var(--primary);
+      border: 1px solid rgba(111, 143, 114, 0.24);
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 0.8rem;
+      margin-bottom: 12px;
+    }
+
+    .card-big-title {
+      font-family: 'Noto Serif TC', serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+
+    .card-big-desc {
+      font-size: 1rem;
+      color: var(--text-muted);
+      line-height: 1.75;
+      margin-bottom: 16px;
+    }
+
+    .card-meta-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .card-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.94rem;
+      background: rgba(255, 255, 255, 0.7);
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 1px solid rgba(63, 93, 74, 0.12);
+    }
+
+    .card-meta-item i {
+      color: var(--primary-accent);
+    }
+
+    .card-right-preview {
+      background: linear-gradient(145deg, #23363b, #36515b);
+      border-radius: 16px;
+      padding: 22px;
+      color: #f9f4eb;
+      border: 1px solid rgba(255,255,255,0.12);
+      box-shadow: inset 0 2px 12px rgba(0,0,0,0.14);
+    }
+
+    .preview-header {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: rgba(249, 244, 235, 0.78);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .preview-box {
+      font-size: 0.95rem;
+      color: #f9f4eb;
+      line-height: 1.65;
+    }
+
+    .sim-section {
+      background: linear-gradient(135deg, rgba(255,255,255,0.92), rgba(242,232,220,0.95));
+      border: 1px solid var(--surface-border);
+      border-radius: 22px;
+      padding: 32px;
+      margin-bottom: 56px;
+      box-shadow: var(--shadow);
+    }
+
+    .sim-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 20px;
+    }
+
+    @media (max-width: 868px) {
+      .sim-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .phone-mockup {
+      background: #f6efe7;
+      border: 10px solid #cdb8a3;
+      border-radius: 32px;
+      padding: 18px;
+      box-shadow: 0 16px 34px rgba(35, 54, 59, 0.12);
+    }
+
+    .email-container {
+      background: #ffffff;
+      color: #23363b;
+      border-radius: 16px;
+      padding: 20px;
+      font-size: 0.88rem;
+      box-shadow: inset 0 1px 0 rgba(0,0,0,0.04);
+    }
+
+    .email-header {
+      border-bottom: 1px solid #e8e0d6;
+      padding-bottom: 12px;
+      margin-bottom: 12px;
+    }
+
+    .email-title {
+      font-weight: 700;
+      color: #23363b;
+      font-size: 0.95rem;
+    }
+
+    .email-btn-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .rsvp-btn {
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.88rem;
+    }
+
+    .rsvp-btn.confirm {
+      background: linear-gradient(135deg, var(--primary), var(--primary-accent));
+      color: #ffffff;
+    }
+
+    .rsvp-btn.cancel {
+      background: #f4ede3;
+      color: #6f756f;
+    }
+
+    .sf-mockup {
+      background: linear-gradient(145deg, #23363b, #36515b);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 18px;
+      padding: 20px;
+      color: #f9f4eb;
+    }
+
+    .sf-badge {
+      display: inline-block;
+      background: rgba(122, 154, 168, 0.24);
+      color: #f9f4eb;
+      font-size: 0.76rem;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .sf-status-box {
+      background: rgba(255,255,255,0.08);
+      border-radius: 10px;
+      padding: 16px;
+      margin-top: 15px;
+      border-left: 4px solid rgba(249,244,235,0.3);
+      transition: all 0.4s ease;
+    }
+
+    .sf-status-box.active {
+      border-left-color: #8fbf93;
+      background: rgba(143, 191, 147, 0.16);
+    }
+
+    .it-box {
+      background: linear-gradient(135deg, rgba(255,255,255,0.92), rgba(242,232,220,0.95));
+      border: 1px solid var(--surface-border);
+      border-radius: 22px;
+      padding: 28px;
+      margin-bottom: 56px;
+      box-shadow: var(--shadow);
+    }
+
+    .it-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .it-card {
+      background: rgba(255,255,255,0.65);
+      border: 1px solid rgba(63, 93, 74, 0.12);
+      padding: 16px;
+      border-radius: 14px;
+    }
+
+    .it-card h4 {
+      color: var(--primary);
+      margin-bottom: 8px;
+      font-size: 0.96rem;
+    }
+
+    .it-card p {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+    }
+
+    footer {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      margin-top: 56px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="brand">
+      <i class="fa-solid fa-church"></i>
+      The Hope Church Life
+      <span class="brand-badge">Executive Proposal</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="#flow">大圖互動流程</a></li>
+      <li><a href="#demo">實機模擬器</a></li>
+      <li><a href="#architecture">IT需求規格</a></li>
+    </ul>
+  </nav>
+
+  <div class="container">
+    
+    <!-- Hero Banner -->
+    <header class="hero">
+      <div class="hero-eyebrow"><i class="fa-solid fa-feather"></i> 主管版簡報模板</div>
+      <h1>讓 BELONG 活動從流程，變成一場可被看見的溫度</h1>
+      <p>以柔和、清楚、具節奏的方式，呈現從 RSVP、媒合到留存的完整故事，讓主管一眼看懂這份自動化提案的價值與人情味，並清楚說明與 IT 的配合方式。</p>
+      <div class="hero-highlights">
+        <span class="hero-pill">減少人工等待</span>
+        <span class="hero-pill">提升回應效率</span>
+        <span class="hero-pill">讓團隊更有準備</span>
+      </div>
+      <div class="hero-summary">
+        <strong>簡報重點：</strong> 這份流程不只是系統自動化，而是把人與人之間的連結，用更有溫度的方式被安排、被確認、被陪伴；並讓新朋友與區長／小組長的可聚會時間，能在流程中被更清楚地對齊。
+      </div>
+    </header>
+
+    <!-- Metrics -->
+    <section class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-icon"><i class="fa-solid fa-clock"></i></div>
+        <div class="metric-value">-70%</div>
+        <div class="metric-label">人工聯繫時間</div>
+      </div>
+      <div class="metric-card green">
+        <div class="metric-icon"><i class="fa-solid fa-bolt"></i></div>
+        <div class="metric-value">100%</div>
+        <div class="metric-label">Salesforce 自動媒合</div>
+      </div>
+      <div class="metric-card yellow">
+        <div class="metric-icon"><i class="fa-solid fa-chart-pie"></i></div>
+        <div class="metric-value">即時同步</div>
+        <div class="metric-label">第1~2週留存儀表板</div>
+      </div>
+    </section>
+
+    <!-- 🔥 巨幅一目瞭然互動流程圖 (Giant Interactive Flowchart Playground) -->
+    <section class="flow-playground" id="flow">
+      <div class="flow-toolbar">
+        <div class="section-title">
+          <i class="fa-solid fa-diagram-project" style="color: var(--primary-accent);"></i>
+          從報名到陪伴：一頁看懂這段流程
+        </div>
+        <button class="flow-play-btn" onclick="toggleAutoPlay()">
+          <i class="fa-solid fa-play" id="play-icon"></i> <span id="play-text">播放全流程簡報</span>
+        </button>
+      </div>
+
+      <!-- Steps Bar -->
+      <div class="steps-bar" id="steps-bar">
+        <!-- Rendered by JS -->
+      </div>
+
+      <!-- Giant Focused Display Card -->
+      <div class="giant-card" id="giant-card">
+        <div class="card-left">
+          <span class="card-left-badge" id="card-day">D-14 (8/30)</span>
+          <h2 class="card-big-title" id="card-title">階段一：第一階段錄取與一鍵 RSVP</h2>
+          <p class="card-big-desc" id="card-desc">
+            Salesforce 自動對 48 位預錄取會眾發送帶有動態加密 Token 的 RSVP 信件；若未回覆，系統再以 LINE 官方帳號提醒，讓流程更自然，也更適合 IT 與營運共同執行。
+          </p>
+
+          <div class="card-meta-list">
+            <div class="card-meta-item">
+              <i class="fa-solid fa-robot"></i>
+              <span><strong>Salesforce 動作：</strong><span id="card-sf-action">自動發送信件，並監聽 RSVP Webhook 點擊狀態</span></span>
+            </div>
+            <div class="card-meta-item">
+              <i class="fa-solid fa-users"></i>
+              <span><strong>負責團隊：</strong><span id="card-team">Church Life / 系統自動執行</span></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-right-preview">
+          <div class="preview-header">
+            <span>通訊/動作現場預覽</span>
+            <span id="preview-type-tag">EMAIL</span>
+          </div>
+          <div class="preview-box" id="preview-box">
+            <!-- Dynamic Content -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Live Simulation Demo -->
+    <section class="sim-section" id="demo">
+      <div class="section-header">
+        <div class="section-title">
+          <i class="fa-solid fa-laptop-code" style="color: var(--secondary);"></i>
+          主管可感受的互動體驗：一鍵確認，流程即刻跟上
+        </div>
+        <div class="section-subtitle">點選左側的確認按鈕，觀察右側的同步畫面如何把一個簡單回應，變成下一步的連結。</div>
+      </div>
+
+      <div class="sim-grid">
+        <!-- Left: Phone -->
+        <div class="phone-mockup">
+          <div class="email-container">
+            <div class="email-header">
+              <div class="email-title">【The Hope 09/13 BELONG活動 出席確認】</div>
+              <div class="email-sender">寄件者: Belong.tpe@thehope.co</div>
+            </div>
+            <p style="margin-bottom: 12px; font-size: 0.85rem; color: #334155;">
+              親愛的家人，很高興你報名參加 9/13 BELONG 活動！請點選下方按鈕確認出席：
+            </p>
+            <div class="email-btn-group">
+              <button class="rsvp-btn confirm" onclick="triggerRsvp('Confirmed')">
+                <i class="fa-solid fa-circle-check"></i> ✅ 我確認會準時出席
+              </button>
+              <button class="rsvp-btn cancel" onclick="triggerRsvp('Cancelled')">
+                <i class="fa-solid fa-circle-xmark"></i> ❌ 這次無法出席，改預約下一場
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Salesforce -->
+        <div class="sf-mockup">
+          <span class="sf-badge"><i class="fa-cloud"></i> Salesforce Live Dashboard</span>
+          <h3 style="color: #ffffff; font-size: 1.1rem; margin-bottom: 12px;">聯絡人紀錄: 王大明 (Member #8849)</h3>
+          
+          <div style="font-size: 0.88rem; color: var(--text-muted); display: grid; gap: 8px;">
+            <div>可聚會時間: <strong>週日 4:00 PM - 6:00 PM</strong></div>
+            <div>登錄狀態 (RSVP): <span id="sf-rsvp-status" style="font-weight: 700; color: #f59e0b;">⏳ 待確認 (Pending)</span></div>
+          </div>
+
+          <div class="sf-status-box" id="sf-box">
+            <div style="font-weight: 700; font-size: 0.92rem; color: #ffffff;" id="sf-box-title">目前尚未點擊回覆</div>
+            <div style="font-size: 0.82rem; color: var(--text-muted); margin-top: 4px;" id="sf-box-desc">同工無需人工查信或手動對照。</div>
+          </div>
+
+          <div style="margin-top: 15px; background: rgba(0,0,0,0.3); padding: 12px; border-radius: 8px; font-size: 0.8rem; color: #94a3b8;">
+            <i class="fa-solid fa-robot"></i> <strong>Salesforce Flow 比對預覽:</strong><br>
+            <span id="sf-flow-msg">等待點擊按鈕觸發...</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- IT Spec -->
+    <section id="architecture">
+      <div class="it-box">
+        <h3 style="color: var(--text); font-size: 1.25rem;">🛠️ 給主管與 IT 團隊的共同語言</h3>
+        <div class="it-list">
+          <div class="it-card">
+            <h4>1. Dynamic RSVP Webhook</h4>
+            <p>加密 Token 動態 URL，點擊即自動修改 Salesforce 欄位為 Confirmed/Cancelled。</p>
+          </div>
+          <div class="it-card">
+            <h4>2. LINE 官方帳號整合</h4>
+            <p>以 LINE 官方帳號為主要提醒管道，於 48 小時無回應時自動觸發提醒，兼顧成本與互動率。</p>
+          </div>
+          <div class="it-card">
+            <h4>3. Auto-Matching Flow</h4>
+            <p>依據新朋友與區長／小組長的可聚會時間進行比對；若有重疊即自動配對，若無重疊則標註待確認，IT 可協助建立欄位與例外流程。</p>
+          </div>
+          <div class="it-card">
+            <h4>4. Retention Dashboard</h4>
+            <p>區長打卡即時連動，產出第 1~2 週留存率與轉化圖表。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <p>The Hope Church Life & Operation Team © 2026. Designed as a warm, shareable executive presentation.</p>
+    </footer>
+
+  </div>
+
+  <!-- Interactive Logic -->
+  <script>
+    const stepsData = [
+      {
+        day: "D - 14",
+        title: "階段一：一鍵 RSVP 通知",
+        desc: "Salesforce 自動對預錄取會眾寄出第一階段通知信。信中帶有專屬單擊按鈕（RSVP），會眾點擊後狀態直接改為 Confirmed，同工 0 人工查信負擔！",
+        sfAction: "自動發送 Email 並開啟 Webhook 監聽",
+        team: "Church Life / 系統自動執行",
+        tag: "EMAIL 範本",
+        preview: `<strong>標題：【The Hope 9/13 BELONG活動 成功報名】</strong><br><br>請點選下方連結確認出席：<br><span style="color: #3b82f6; text-decoration: underline;">[ ✅ 我確認會準時出席 ]</span> &nbsp; <span style="color: #94a3b8; text-decoration: underline;">[ ❌ 預約下一場 ]</span>`
+      },
+      {
+        day: "D - 12",
+        title: "階段二：LINE 官方帳號提醒備案",
+        desc: "若會眾 48 小時內未點擊 RSVP（可能郵件進垃圾匣），Salesforce 自動觸發 LINE 官方帳號提醒，讓提醒更貼近使用習慣，也更符合 IT 的成本考量。",
+        sfAction: "自動篩選 Pending 名單並透過 LINE 官方帳號發送提醒",
+        team: "Salesforce 自動化 Flow",
+        tag: "LINE 官方帳號範本",
+        preview: `【The Hope】親愛的家人，已寄送 9/13 BELONG 活動出席確認通知，請點擊連結完成確認以保留名額：<br><span style="color: #3b82f6; text-decoration: underline;">https://hope.co/rsvp/8849</span>`
+      },
+      {
+        day: "D - 11",
+        title: "階段三：電話追蹤 & 遞補",
+        desc: "下一步團隊登入 Salesforce 查看極少數未回覆名單進行撥打；確認未出席者由系統自動發送「第二階段遞補通知信」。",
+        sfAction: "CRM 產出待聯繫清單，電話確認後一鍵勾選",
+        team: "Next Steps 團隊 (下一步團隊)",
+        tag: "CRM 管理界面",
+        preview: `<strong>下一步團隊 CRM 視角：</strong><br>• 王大明 (未接聽 → 備註第二次撥打)<br>• 李小美 (電話確認出席 → 一鍵勾選 Confirmed)`
+      },
+      {
+        day: "D - 3",
+        title: "階段四：新朋友與小組時間對齊",
+        desc: "Salesforce Flow 先比對新朋友與區長／帶領小組長的可聚會時間；若有重疊，系統即自動配對至對應小組；若無重疊，則標記為待確認，讓下一步團隊可以更精準處理。",
+        sfAction: "Auto-Matching Flow 比對時間並產出待確認清單與小組分派建議",
+        team: "Salesforce 比對演算法 / IT 協作設定",
+        tag: "小組配對流程",
+        preview: `<strong>【配對建議】</strong><br>• 新朋友王大明：週日 4:00 PM - 6:00 PM<br>• 區長張小明／小組長：週日 4:00 PM 可帶領<br><em>時間重疊，建議自動配對至第一組</em>`
+      },
+      {
+        day: "D - 2",
+        title: "階段五：行前雙管道提醒",
+        desc: "發送 D-2 行前通知 Email 與 LINE，提醒報到時間為 3:45 PM - 4:00 PM，地點於 1F 副堂。逾時名額自動釋出。",
+        sfAction: "多管道提醒群發與報到 QR Code 生成",
+        team: "Church Life / 系統自動執行",
+        tag: "行前提醒範本",
+        preview: `<strong>【09/13 BELONG 活動行前通知】</strong><br>報到時間｜3:45 PM - 4:00 PM<br>活動地點｜1F 副堂<br>期待週日見！`
+      },
+      {
+        day: "D + 14",
+        title: "階段六：CRM 打卡與留存看板",
+        desc: "區長於第 1 週與第 2 週聚會時直接在 Salesforce 進行點名打卡。系統即時呈現 Retention Dashboard 留存率圖表！",
+        sfAction: "自動計算第 1~2 週留存率 % 並呈現在管理儀表板",
+        team: "區長打卡 / 管理者閱覽",
+        tag: "DASHBOARD 視角",
+        preview: `<strong>BELONG 留存率看板：</strong><br>• 9/13 實際出席：48/48 (100%)<br>• 第 1 週進入小組：92%<br>• 第 2 週穩定出席：88%`
+      }
+    ];
+
+    let currentStep = 0;
+    let autoPlayTimer = null;
+
+    function renderStepsBar() {
+      const bar = document.getElementById('steps-bar');
+      bar.innerHTML = stepsData.map((step, idx) => `
+        <div class="step-node ${idx === 0 ? 'active' : ''}" onclick="selectStep(${idx})">
+          <div class="step-day">${step.day}</div>
+          <div class="step-title">${step.title.split('：')[1] || step.title}</div>
+        </div>
+      `).join('');
+    }
+
+    function selectStep(idx) {
+      currentStep = idx;
+      const nodes = document.querySelectorAll('.step-node');
+      nodes.forEach((node, i) => {
+        if (i === idx) node.classList.add('active');
+        else node.classList.remove('active');
+      });
+
+      const data = stepsData[idx];
+      document.getElementById('card-day').innerText = data.day;
+      document.getElementById('card-title').innerText = data.title;
+      document.getElementById('card-desc').innerText = data.desc;
+      document.getElementById('card-sf-action').innerText = data.sfAction;
+      document.getElementById('card-team').innerText = data.team;
+      document.getElementById('preview-type-tag').innerText = data.tag;
+      document.getElementById('preview-box').innerHTML = data.preview;
+    }
+
+    function toggleAutoPlay() {
+      const icon = document.getElementById('play-icon');
+      const text = document.getElementById('play-text');
+
+      if (autoPlayTimer) {
+        clearInterval(autoPlayTimer);
+        autoPlayTimer = null;
+        icon.className = 'fa-solid fa-play';
+        text.innerText = '播放全流程簡報';
+      } else {
+        icon.className = 'fa-solid fa-pause';
+        text.innerText = '暫停播放';
+        autoPlayTimer = setInterval(() => {
+          currentStep = (currentStep + 1) % stepsData.length;
+          selectStep(currentStep);
+        }, 3500);
+      }
+    }
+
+    function triggerRsvp(status) {
+      const statusLabel = document.getElementById('sf-rsvp-status');
+      const box = document.getElementById('sf-box');
+      const title = document.getElementById('sf-box-title');
+      const desc = document.getElementById('sf-box-desc');
+      const flowMsg = document.getElementById('sf-flow-msg');
+
+      if (status === 'Confirmed') {
+        statusLabel.innerHTML = '✅ 已確認出席 (Confirmed)';
+        statusLabel.style.color = '#10b981';
+        box.classList.add('active');
+        title.innerHTML = '🎉 成功確認！已觸發 Salesforce 自動媒合流程';
+        desc.innerHTML = '系統已自動更新 Status 欄位，無需人工查信。';
+        flowMsg.innerHTML = '⚡ <strong style="color: #10b981;">配對成功！</strong> 已自動派發至 <strong>區長張小明 (臨時第一組)</strong>。';
+      } else {
+        statusLabel.innerHTML = '❌ 選擇取消 (Cancelled)';
+        statusLabel.style.color = '#ef4444';
+        box.classList.remove('active');
+        title.innerHTML = '⚠️ 狀態更新：取消本次，名額自動釋出';
+        desc.innerHTML = '系統自動釋出此名額給候補名單。';
+        flowMsg.innerHTML = '📩 系統已自動傳送 10/18 下期 BELONG 活動的預約報名連結。';
+      }
+    }
+
+    // Init
+    renderStepsBar();
+    selectStep(0);
+  </script>
+</body>
+</html>
