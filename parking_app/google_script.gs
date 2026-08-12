@@ -28,7 +28,12 @@ function doPost(e) {
       sheet.getRange(1, 1, 1, 7).setFontWeight('bold').setBackground('#efe7dc');
     }
 
-    var data = JSON.parse(e.postData.contents);
+    // 安全解析前端傳來的 JSON 資料 (防止空資料或測試引發錯誤)
+    var data = {};
+    if (e && e.postData && e.postData.contents) {
+      data = JSON.parse(e.postData.contents);
+    }
+    
     var timestamp = new Date();
     var name = data.name || '';
     var email = data.email || '';
@@ -38,11 +43,15 @@ function doPost(e) {
 
     // 自動發送 HTML 確認信
     var mailStatus = '成功';
-    try {
-      sendConfirmationEmail(name, email, phone, plateNumber, parkingType);
-    } catch (mailErr) {
-      Logger.log('郵件寄送失敗: ' + mailErr.toString());
-      mailStatus = '失敗: ' + mailErr.toString();
+    if (email) {
+      try {
+        sendConfirmationEmail(name, email, phone, plateNumber, parkingType);
+      } catch (mailErr) {
+        Logger.log('郵件寄送失敗: ' + mailErr.toString());
+        mailStatus = '失敗: ' + mailErr.toString();
+      }
+    } else {
+      mailStatus = '未提供 Email';
     }
 
     // 寫入 Google Sheet 紀錄
