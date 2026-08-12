@@ -3,8 +3,11 @@
  * 台北場地 停車位申請 - Google Apps Script (GAS) 後端自動化程式碼
  * ==========================================================================
  * 
- * 💡 請將此檔案【所有內容（包含最下方的 sendConfirmationEmail 函數）】
- * 全部複製並貼到 Apps Script 編輯器內！
+ * ⚠️ 重要部署設定提醒：
+ * 在「新增部署 / 管理部署」時：
+ * 1. 【執行身分 (Execute as)】：必須選擇「我 (Me - 您的帳號 Email)」
+ * 2. 【誰有存取權 (Who has access)】：必須選擇「所有人 (Anyone)」
+ * 3. 每次修改點擊「部署」時，【版本 (Version)】必須選擇「建立新版本 (New Version)」！
  */
 
 function doPost(e) {
@@ -80,6 +83,15 @@ function doPost(e) {
   } finally {
     lock.releaseLock();
   }
+}
+
+/**
+ * 手動測試授權函數（若出現權限問題，請選此函數點擊「執行 ▶️」）
+ */
+function testMailAuthorization() {
+  var userEmail = Session.getActiveUser().getEmail();
+  Logger.log('正在為帳號授權寄信權限: ' + userEmail);
+  GmailApp.sendEmail(userEmail, "【測試】停車場申請系統發信授權成功", "恭喜您！Apps Script Gmail 發信權限已成功授權！");
 }
 
 /**
