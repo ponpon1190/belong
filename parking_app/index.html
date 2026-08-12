@@ -113,6 +113,7 @@
   <div class="modal-layer" id="wheelModal">
     <div class="modal-dialog">
       
+      <!-- 轉盤旋轉階段 -->
       <div id="gameStepArea">
         <h2 class="dialog-title">點擊下方按鈕進行小遊戲</h2>
 
@@ -124,18 +125,35 @@
         <button class="spin-btn" id="spinBtn">開始旋轉</button>
       </div>
 
-      <!-- 旋轉結束結果展示區 -->
-      <div class="result-box" id="resultDisplayBox">
+      <!-- 旋轉結束：階段 1 僅顯示題目大卡片與『揭曉答案』按鈕 -->
+      <div class="result-box" id="resultQuestionStage" style="display: none;">
+        <div class="result-header-text">小遊戲題目</div>
+        
+        <div class="result-riddle-card">
+          <div class="riddle-question-title">❓ 題目</div>
+          <div class="riddle-question" id="resultQuestionText">世界上最誠實的食物是什麼？</div>
+        </div>
+
+        <button class="reveal-btn" id="revealAnswerBtn">揭曉答案 💡</button>
+      </div>
+
+      <!-- 點擊揭曉按鈕後：階段 2 展開解答與祝福語 -->
+      <div class="result-box" id="resultAnswerStage" style="display: none;">
         <div class="result-header-text">小遊戲解答</div>
         
         <div class="result-riddle-card">
-          <div class="riddle-question" id="resultQuestion">世界上最誠實的食物是什麼？</div>
-          <div class="riddle-answer" id="resultAnswer">披薩，因為披薩有8片10片，沒有7片（欺騙）</div>
+          <div class="riddle-question-title">❓ 題目</div>
+          <div class="riddle-question" id="finalQuestionText">世界上最誠實的食物是什麼？</div>
+          
+          <div class="riddle-answer-divider"></div>
+          
+          <div class="riddle-answer-title">💡 解答</div>
+          <div class="riddle-answer" id="finalAnswerText">披薩，因為披薩有8片10片，沒有7片（欺騙）</div>
         </div>
 
+        <!-- 最新要求的溫馨祝福語 -->
         <div class="warning-note">
-          <div class="note-title">僅供趣味測試，不代表最終結果！</div>
-          <div class="note-sub">最終結果以 8/21 現場抽籤為準。</div>
+          <div class="note-title">⚠️ 忙碌工作之餘也要記得喜樂， 8/21 現場抽籤祝你中獎！</div>
         </div>
 
         <button class="close-btn" id="closeModalBtn">完成並關閉</button>

@@ -5,44 +5,51 @@
 // 請在此處貼上您部署的 Google Apps Script Web App URL
 const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxIUBdw6muumibzhCWNKHELllxOCWsaeTDhF7AgvmnIwU3B-2tb0uDJTXCl-OS8xG4h/exec';
 
-// 轉盤 5 個特定趣味題目與解答
+// 轉盤 5 個特定趣味題目與解答 (支援兩行大字體繪製)
 const WHEEL_SECTORS = [
   { 
-    shortLabel: '1. 最誠實的食物？',
+    line1: '題目一',
+    line2: '最誠實食物',
     question: '1. 世界上最誠實的食物是什麼？',
     answer: '披薩，因為披薩有8片10片，沒有7片（欺騙）',
     color: '#c68a2c', 
     textColor: '#ffffff' 
   },
   { 
-    shortLabel: '2. A和C誰比較高？',
+    line1: '題目二',
+    line2: 'A與C誰高',
     question: '2. A和C誰比較高？',
     answer: 'C，因為 A比C低（ABCD)',
     color: '#7a6c5d', 
     textColor: '#ffffff' 
   },
   { 
-    shortLabel: '3. 誰不喝冰啤酒？',
+    line1: '題目三',
+    line2: '誰不喝啤酒',
     question: '3. 孔雀、蜻蜓、老虎去吃燒烤，誰不喝冰啤酒？',
     answer: '蜻蜓，因為蜻蜓點水',
     color: '#5b7b9a', 
     textColor: '#ffffff' 
   },
   { 
-    shortLabel: '4. 柯南不換衣服？',
+    line1: '題目四',
+    line2: '柯南不換衣',
     question: '4. 為什麼柯南不換衣服？',
     answer: '因為怕被別人說是新衣',
     color: '#529471', 
     textColor: '#ffffff' 
   },
   { 
-    shortLabel: '5. 噴髮膠會怎樣？',
+    line1: '題目五',
+    line2: '噴髮膠會怎樣',
     question: '5. 小明噴髮膠噴太多了會怎麼樣？',
     answer: '他只好硬著頭皮出門',
     color: '#94657b', 
     textColor: '#ffffff' 
   }
 ];
+
+let currentWinningSector = null;
 
 document.addEventListener('DOMContentLoaded', () => {
   initFormHandler();
@@ -114,7 +121,7 @@ function validateEmail(email) {
 }
 
 // ==========================================
-// 2. 轉盤繪製與物理旋轉動畫 (5 個扇區)
+// 2. 轉盤繪製 (參考範例大字體雙行垂直堆疊)
 // ==========================================
 let canvas, ctx;
 let currentAngle = 0;
@@ -128,6 +135,7 @@ function initWheelCanvas() {
   drawWheel(0);
 
   document.getElementById('spinBtn').addEventListener('click', startSpinWheel);
+  document.getElementById('revealAnswerBtn').addEventListener('click', revealAnswerStage);
   document.getElementById('closeModalBtn').addEventListener('click', closeWheelModal);
 }
 
@@ -155,28 +163,35 @@ function drawWheel(angleOffset) {
     ctx.strokeStyle = '#ffffff';
     ctx.stroke();
 
-    // 繪製大字體標籤文字
+    // 繪製雙行大字體 (參考圖片大字樣式)
     ctx.save();
     ctx.translate(centerX, centerY);
     ctx.rotate(angle + arcSize / 2);
-    ctx.textAlign = 'right';
+    ctx.textAlign = 'center';
     ctx.fillStyle = sector.textColor;
-    ctx.font = 'bold 23px "Plus Jakarta Sans", "Noto Sans TC", sans-serif';
-    ctx.fillText(sector.shortLabel, radius - 24, 8);
+
+    // 第一行大字
+    ctx.font = 'bold 25px "Plus Jakarta Sans", "Noto Sans TC", sans-serif';
+    ctx.fillText(sector.line1, radius * 0.65, -10);
+
+    // 第二行大字
+    ctx.font = 'bold 22px "Plus Jakarta Sans", "Noto Sans TC", sans-serif';
+    ctx.fillText(sector.line2, radius * 0.65, 20);
+
     ctx.restore();
   }
 
-  // 圓心
+  // 圓心按鈕裝飾
   ctx.beginPath();
-  ctx.arc(centerX, centerY, 34, 0, 2 * Math.PI);
+  ctx.arc(centerX, centerY, 42, 0, 2 * Math.PI);
   ctx.fillStyle = '#f5f0eb';
   ctx.fill();
-  ctx.lineWidth = 3;
+  ctx.lineWidth = 4;
   ctx.strokeStyle = '#c68a2c';
   ctx.stroke();
 
   ctx.fillStyle = '#2b2621';
-  ctx.font = 'bold 16px sans-serif';
+  ctx.font = 'bold 18px sans-serif';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillText('GO', centerX, centerY);
@@ -223,30 +238,51 @@ function startSpinWheel() {
   requestAnimationFrame(animate);
 }
 
+// 轉盤停止：第一階段只顯示題目
 function onSpinComplete(winningSector) {
+  currentWinningSector = winningSector;
+
   const gameStepArea = document.getElementById('gameStepArea');
-  const resultDisplayBox = document.getElementById('resultDisplayBox');
-  const resultQuestion = document.getElementById('resultQuestion');
-  const resultAnswer = document.getElementById('resultAnswer');
+  const resultQuestionStage = document.getElementById('resultQuestionStage');
+  const resultAnswerStage = document.getElementById('resultAnswerStage');
+  const resultQuestionText = document.getElementById('resultQuestionText');
 
   gameStepArea.style.display = 'none';
-  resultDisplayBox.style.display = 'block';
+  resultAnswerStage.style.display = 'none';
+  resultQuestionStage.style.display = 'block';
 
-  resultQuestion.textContent = winningSector.question;
-  resultAnswer.textContent = '解答：' + winningSector.answer;
+  resultQuestionText.textContent = winningSector.question;
+}
+
+// 點擊『揭曉答案 💡』按鈕：第二階段展開解答與最新祝福語
+function revealAnswerStage() {
+  if (!currentWinningSector) return;
+
+  const resultQuestionStage = document.getElementById('resultQuestionStage');
+  const resultAnswerStage = document.getElementById('resultAnswerStage');
+  const finalQuestionText = document.getElementById('finalQuestionText');
+  const finalAnswerText = document.getElementById('finalAnswerText');
+
+  resultQuestionStage.style.display = 'none';
+  resultAnswerStage.style.display = 'block';
+
+  finalQuestionText.textContent = currentWinningSector.question;
+  finalAnswerText.textContent = currentWinningSector.answer;
 }
 
 // ==========================================
-// 3. Modal 視窗與 Toast
+// 3. Modal 視窗控制與 Toast
 // ==========================================
 function openWheelModal() {
   const modal = document.getElementById('wheelModal');
   const gameStepArea = document.getElementById('gameStepArea');
-  const resultDisplayBox = document.getElementById('resultDisplayBox');
+  const resultQuestionStage = document.getElementById('resultQuestionStage');
+  const resultAnswerStage = document.getElementById('resultAnswerStage');
   const spinBtn = document.getElementById('spinBtn');
 
   gameStepArea.style.display = 'block';
-  resultDisplayBox.style.display = 'none';
+  resultQuestionStage.style.display = 'none';
+  resultAnswerStage.style.display = 'none';
   spinBtn.disabled = false;
 
   modal.classList.add('active');

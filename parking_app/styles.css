@@ -355,9 +355,14 @@ body {
   cursor: not-allowed;
 }
 
-/* 題目與解答結果展示區塊 (放大清晰字體) */
+/* 題目與解答結果展示區塊 (大字體排版) */
 .result-box {
-  display: none;
+  animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .result-header-text {
@@ -378,29 +383,71 @@ body {
   text-align: center;
 }
 
+.riddle-question-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-tertiary);
+  margin-bottom: 8px;
+  letter-spacing: 0.05em;
+}
+
 .riddle-question {
-  font-size: 1.25rem;
+  font-size: 1.3rem;
   font-weight: 700;
   color: var(--text-primary);
-  margin-bottom: 16px;
   line-height: 1.5;
 }
 
+.riddle-answer-divider {
+  height: 1px;
+  background-color: var(--border-subtle);
+  margin: 18px 0;
+}
+
+.riddle-answer-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--accent-warm);
+  margin-bottom: 8px;
+  letter-spacing: 0.05em;
+}
+
 .riddle-answer {
-  font-size: 1.2rem;
+  font-size: 1.25rem;
   font-weight: 700;
   color: var(--accent-warm);
   line-height: 1.6;
   background-color: rgba(198, 138, 44, 0.1);
-  padding: 12px 16px;
+  padding: 14px 18px;
   border-radius: 8px;
 }
 
+/* 揭曉答案醒目按鈕 */
+.reveal-btn {
+  width: 100%;
+  padding: 16px 24px;
+  background-color: var(--accent-warm);
+  border: none;
+  border-radius: 28px;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  box-shadow: 0 4px 14px rgba(198, 138, 44, 0.25);
+}
+
+.reveal-btn:hover {
+  background-color: var(--accent-hover);
+  transform: translateY(-1px);
+}
+
 .warning-note {
-  padding: 16px;
+  padding: 18px;
   background-color: var(--bg-dark);
   border: 1px dashed var(--border-subtle);
-  border-radius: 8px;
+  border-radius: 10px;
   margin-bottom: 24px;
 }
 
@@ -408,12 +455,7 @@ body {
   font-size: 0.95rem;
   font-weight: 700;
   color: var(--text-primary);
-  margin-bottom: 4px;
-}
-
-.note-sub {
-  font-size: 0.85rem;
-  color: var(--text-secondary);
+  line-height: 1.6;
 }
 
 .close-btn {
@@ -460,6 +502,6 @@ body {
   body { padding: 36px 16px; }
   .choice-group { grid-template-columns: 1fr; }
   .list-content { flex-direction: column; gap: 2px; }
-  .riddle-question { font-size: 1.1rem; }
-  .riddle-answer { font-size: 1.05rem; }
+  .riddle-question { font-size: 1.15rem; }
+  .riddle-answer { font-size: 1.1rem; }
 }
