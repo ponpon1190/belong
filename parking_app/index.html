@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>台北場地 停車位申請</title>
+  <meta name="description" content="2026年 9月-12月 台北場地停車位申請系統">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <main class="page-wrapper">
+
+    <!-- 標頭資訊區塊 -->
+    <header class="header-group">
+      <span class="subtext-badge">TAIPEI CAMPUS PARKING PERMIT</span>
+      <h1 class="main-heading">台北場地 停車位申請</h1>
+      <p class="intro-desc">請於截止日前完成資料填寫，系統將自動寄發確認信與現場抽籤提醒。</p>
+    </header>
+
+    <!-- 申請須知與重點時程 (條列式無卡片設計) -->
+    <section class="info-notice-section">
+      <h2 class="section-title">申請須知與重點時程</h2>
+      <ul class="notice-list">
+        <li>
+          <span class="list-bullet">•</span>
+          <div class="list-content">
+            <strong class="list-label">申請對象</strong>
+            <span class="list-text">申請人員須為全職及入職已滿 3 個月夥伴</span>
+          </div>
+        </li>
+        <li>
+          <span class="list-bullet">•</span>
+          <div class="list-content">
+            <strong class="list-label">申請期限</strong>
+            <span class="list-text highlight">即日起 至 2026/8/19 (三) 23:59 截止</span>
+          </div>
+        </li>
+        <li>
+          <span class="list-bullet">•</span>
+          <div class="list-content">
+            <strong class="list-label">現場抽籤時間</strong>
+            <span class="list-text highlight">2026/8/21 (五) 11AM（All Staff Meeting 結束後，請親自到場抽籤）</span>
+          </div>
+        </li>
+        <li>
+          <span class="list-bullet">•</span>
+          <div class="list-content">
+            <strong class="list-label">車位停放期限</strong>
+            <span class="list-text">本次申請使用期限為 9月 ～ 12月底</span>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <!-- 申請表單區塊 -->
+    <section class="form-section">
+      <h2 class="section-title">申請資料填寫</h2>
+      
+      <form id="parkingForm" novalidate>
+
+        <div class="field-row">
+          <label for="name" class="field-label">姓名 <span class="mark">*</span></label>
+          <input type="text" id="name" name="name" class="input-control" placeholder="請輸入您的中文姓名" required>
+        </div>
+
+        <div class="field-row">
+          <label for="email" class="field-label">Email 信箱 <span class="mark">*</span></label>
+          <input type="email" id="email" name="email" class="input-control" placeholder="example@company.com" required>
+        </div>
+
+        <div class="field-row">
+          <label for="phone" class="field-label">聯絡電話 <span class="mark">*</span></label>
+          <input type="tel" id="phone" name="phone" class="input-control" placeholder="0912-345-678" required>
+        </div>
+
+        <div class="field-row">
+          <label for="plateNumber" class="field-label">車牌號碼 <span class="mark">*</span></label>
+          <input type="text" id="plateNumber" name="plateNumber" class="input-control" placeholder="例如：ABC-1234" required>
+        </div>
+
+        <div class="field-row">
+          <span class="field-label">申請車位類型 <span class="mark">*</span></span>
+          <div class="choice-group">
+            <label class="choice-item">
+              <input type="radio" name="parkingType" value="Director 車位" checked required>
+              <span class="choice-label">Director 車位</span>
+            </label>
+
+            <label class="choice-item">
+              <input type="radio" name="parkingType" value="全職夥伴車位" required>
+              <span class="choice-label">全職夥伴車位</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="action-row">
+          <button type="submit" class="primary-btn" id="submitBtn">
+            <span class="loader" id="btnSpinner"></span>
+            <span id="btnText">送出申請</span>
+          </button>
+        </div>
+
+      </form>
+    </section>
+
+  </main>
+
+  <!-- 轉盤遊戲 Modal 浮窗 -->
+  <div class="modal-layer" id="wheelModal">
+    <div class="modal-dialog">
+      
+      <div id="gameStepArea">
+        <h2 class="dialog-title">點擊下方按鈕進行小遊戲</h2>
+
+        <div class="wheel-stage">
+          <div class="wheel-pointer-icon">▲</div>
+          <canvas id="wheelCanvas" width="560" height="560"></canvas>
+        </div>
+
+        <button class="spin-btn" id="spinBtn">開始旋轉</button>
+      </div>
+
+      <!-- 旋轉結束結果展示區 -->
+      <div class="result-box" id="resultDisplayBox">
+        <div class="result-header-text">測試小遊戲結果</div>
+        
+        <div class="result-pill" id="resultBadge">
+          抽中車位的測試喔！！
+        </div>
+
+        <div class="warning-note">
+          <div class="note-title">僅供趣味測試，不代表最終結果！</div>
+          <div class="note-sub">最終結果以 8/21 現場抽籤為準。</div>
+        </div>
+
+        <button class="close-btn" id="closeModalBtn">完成並關閉</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Toast 訊息通知容器 -->
+  <div class="toast-popup" id="toastBox">
+    <span id="toastMsg">通知內容</span>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
