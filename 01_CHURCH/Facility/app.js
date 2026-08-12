@@ -5,13 +5,43 @@
 // 請在此處貼上您部署的 Google Apps Script Web App URL
 const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxIUBdw6muumibzhCWNKHELllxOCWsaeTDhF7AgvmnIwU3B-2tb0uDJTXCl-OS8xG4h/exec';
 
-// 轉盤 5 個特定選項 (明亮大地色系質感調色)
+// 轉盤 5 個特定趣味題目與解答
 const WHEEL_SECTORS = [
-  { label: '抽中車位的測試喔！！', color: '#c68a2c', textColor: '#ffffff' },
-  { label: '沒抽中，只是測試喔！', color: '#7a6c5d', textColor: '#ffffff' },
-  { label: '8/21 才抽籤喔', color: '#5b7b9a', textColor: '#ffffff' },
-  { label: '有恩典車位喔', color: '#529471', textColor: '#ffffff' },
-  { label: '還是有機會可以停車的喔', color: '#94657b', textColor: '#ffffff' }
+  { 
+    shortLabel: '1. 最誠實的食物？',
+    question: '1. 世界上最誠實的食物是什麼？',
+    answer: '披薩，因為披薩有8片10片，沒有7片（欺騙）',
+    color: '#c68a2c', 
+    textColor: '#ffffff' 
+  },
+  { 
+    shortLabel: '2. A和C誰比較高？',
+    question: '2. A和C誰比較高？',
+    answer: 'C，因為 A比C低（ABCD)',
+    color: '#7a6c5d', 
+    textColor: '#ffffff' 
+  },
+  { 
+    shortLabel: '3. 誰不喝冰啤酒？',
+    question: '3. 孔雀、蜻蜓、老虎去吃燒烤，誰不喝冰啤酒？',
+    answer: '蜻蜓，因為蜻蜓點水',
+    color: '#5b7b9a', 
+    textColor: '#ffffff' 
+  },
+  { 
+    shortLabel: '4. 柯南不換衣服？',
+    question: '4. 為什麼柯南不換衣服？',
+    answer: '因為怕被別人說是新衣',
+    color: '#529471', 
+    textColor: '#ffffff' 
+  },
+  { 
+    shortLabel: '5. 噴髮膠會怎樣？',
+    question: '5. 小明噴髮膠噴太多了會怎麼樣？',
+    answer: '他只好硬著頭皮出門',
+    color: '#94657b', 
+    textColor: '#ffffff' 
+  }
 ];
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -94,7 +124,7 @@ function initWheelCanvas() {
   canvas = document.getElementById('wheelCanvas');
   if (!canvas) return;
   ctx = canvas.getContext('2d');
-
+  
   drawWheel(0);
 
   document.getElementById('spinBtn').addEventListener('click', startSpinWheel);
@@ -106,7 +136,7 @@ function drawWheel(angleOffset) {
   const arcSize = (2 * Math.PI) / numSectors;
   const centerX = canvas.width / 2;
   const centerY = canvas.height / 2;
-  const radius = centerX - 8;
+  const radius = centerX - 10;
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -121,24 +151,24 @@ function drawWheel(angleOffset) {
     ctx.closePath();
     ctx.fillStyle = sector.color;
     ctx.fill();
-    ctx.lineWidth = 2;
+    ctx.lineWidth = 3;
     ctx.strokeStyle = '#ffffff';
     ctx.stroke();
 
-    // 繪製文字
+    // 繪製大字體標籤文字
     ctx.save();
     ctx.translate(centerX, centerY);
     ctx.rotate(angle + arcSize / 2);
     ctx.textAlign = 'right';
     ctx.fillStyle = sector.textColor;
-    ctx.font = 'bold 21px "Plus Jakarta Sans", "Noto Sans TC", sans-serif';
-    ctx.fillText(sector.label, radius - 24, 7);
+    ctx.font = 'bold 23px "Plus Jakarta Sans", "Noto Sans TC", sans-serif';
+    ctx.fillText(sector.shortLabel, radius - 24, 8);
     ctx.restore();
   }
 
   // 圓心
   ctx.beginPath();
-  ctx.arc(centerX, centerY, 32, 0, 2 * Math.PI);
+  ctx.arc(centerX, centerY, 34, 0, 2 * Math.PI);
   ctx.fillStyle = '#f5f0eb';
   ctx.fill();
   ctx.lineWidth = 3;
@@ -146,7 +176,7 @@ function drawWheel(angleOffset) {
   ctx.stroke();
 
   ctx.fillStyle = '#2b2621';
-  ctx.font = 'bold 15px sans-serif';
+  ctx.font = 'bold 16px sans-serif';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillText('GO', centerX, centerY);
@@ -165,10 +195,10 @@ function startSpinWheel() {
   const baseRounds = 5 + Math.floor(Math.random() * 2);
   const targetAngleInSector = (Math.random() * 0.6 + 0.2) * sectorArc;
   const sectorStartAngle = winningIndex * sectorArc;
-
+  
   // 指針停留於下方 0.5 * Math.PI 處
   const targetAngle = (baseRounds * 2 * Math.PI) + (0.5 * Math.PI - sectorStartAngle - targetAngleInSector);
-
+  
   const startTime = performance.now();
   const duration = 4000;
   const startAngle = currentAngle;
@@ -176,7 +206,7 @@ function startSpinWheel() {
   function animate(currentTime) {
     const elapsed = currentTime - startTime;
     const progress = Math.min(elapsed / duration, 1);
-
+    
     const easeProgress = 1 - Math.pow(1 - progress, 4);
 
     currentAngle = startAngle + (targetAngle - startAngle) * easeProgress;
@@ -196,12 +226,14 @@ function startSpinWheel() {
 function onSpinComplete(winningSector) {
   const gameStepArea = document.getElementById('gameStepArea');
   const resultDisplayBox = document.getElementById('resultDisplayBox');
-  const resultBadge = document.getElementById('resultBadge');
+  const resultQuestion = document.getElementById('resultQuestion');
+  const resultAnswer = document.getElementById('resultAnswer');
 
   gameStepArea.style.display = 'none';
   resultDisplayBox.style.display = 'block';
 
-  resultBadge.textContent = winningSector.label;
+  resultQuestion.textContent = winningSector.question;
+  resultAnswer.textContent = '解答：' + winningSector.answer;
 }
 
 // ==========================================

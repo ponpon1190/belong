@@ -177,7 +177,7 @@ body {
   color: var(--text-tertiary);
 }
 
-/* 車位類型單選選項 (無備註) */
+/* 車位類型單選選項 */
 .choice-group {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -219,7 +219,7 @@ body {
   color: var(--accent-warm);
 }
 
-/* 提交按鈕『送出申請』 */
+/* 提交按鈕 */
 .action-row {
   margin-top: 36px;
 }
@@ -295,31 +295,25 @@ body {
   border: 1px solid var(--border-subtle);
   border-radius: 16px;
   padding: 36px 28px;
-  max-width: 440px;
+  max-width: 480px;
   width: 100%;
   text-align: center;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
 }
 
 .dialog-title {
-  font-size: 1.4rem;
+  font-size: 1.5rem;
   font-weight: 700;
   color: var(--text-primary);
-  margin-bottom: 6px;
-}
-
-.dialog-subtitle {
-  font-size: 0.875rem;
-  color: var(--text-secondary);
   margin-bottom: 24px;
 }
 
 /* 轉盤容器與指針 */
 .wheel-stage {
   position: relative;
-  width: 280px;
-  height: 280px;
-  margin: 0 auto 24px;
+  width: 300px;
+  height: 300px;
+  margin: 0 auto 28px;
 }
 
 .wheel-pointer-icon {
@@ -328,25 +322,25 @@ body {
   left: 50%;
   transform: translateX(-50%);
   color: var(--accent-warm);
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   z-index: 10;
 }
 
 #wheelCanvas {
-  width: 280px;
-  height: 280px;
+  width: 300px;
+  height: 300px;
   border-radius: 50%;
   border: 3px solid var(--border-subtle);
 }
 
 .spin-btn {
-  padding: 12px 36px;
+  padding: 14px 40px;
   background-color: var(--accent-warm);
   border: none;
-  border-radius: 24px;
+  border-radius: 28px;
   color: #ffffff;
   font-family: inherit;
-  font-size: 0.95rem;
+  font-size: 1.05rem;
   font-weight: 700;
   cursor: pointer;
   transition: background-color 0.2s ease;
@@ -361,27 +355,45 @@ body {
   cursor: not-allowed;
 }
 
-/* 結果區塊 */
+/* 題目與解答結果展示區塊 (放大清晰字體) */
 .result-box {
   display: none;
 }
 
 .result-header-text {
-  font-size: 0.85rem;
+  font-size: 0.9rem;
+  font-weight: 700;
   color: var(--text-tertiary);
-  letter-spacing: 0.05em;
-  margin-bottom: 12px;
+  letter-spacing: 0.08em;
+  margin-bottom: 16px;
+  text-transform: uppercase;
 }
 
-.result-pill {
-  font-size: 1.15rem;
+.result-riddle-card {
+  padding: 24px 20px;
+  background-color: #fdfbf7;
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.riddle-question {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+
+.riddle-answer {
+  font-size: 1.2rem;
   font-weight: 700;
   color: var(--accent-warm);
-  padding: 14px 20px;
+  line-height: 1.6;
   background-color: rgba(198, 138, 44, 0.1);
+  padding: 12px 16px;
   border-radius: 8px;
-  margin-bottom: 24px;
-  line-height: 1.4;
 }
 
 .warning-note {
@@ -393,7 +405,7 @@ body {
 }
 
 .note-title {
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   font-weight: 700;
   color: var(--text-primary);
   margin-bottom: 4px;
@@ -405,13 +417,14 @@ body {
 }
 
 .close-btn {
-  padding: 10px 24px;
+  padding: 12px 28px;
   background-color: transparent;
   border: 1px solid var(--border-subtle);
   border-radius: 6px;
   color: var(--text-secondary);
   font-family: inherit;
-  font-size: 0.875rem;
+  font-size: 0.95rem;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -447,4 +460,6 @@ body {
   body { padding: 36px 16px; }
   .choice-group { grid-template-columns: 1fr; }
   .list-content { flex-direction: column; gap: 2px; }
+  .riddle-question { font-size: 1.1rem; }
+  .riddle-answer { font-size: 1.05rem; }
 }
