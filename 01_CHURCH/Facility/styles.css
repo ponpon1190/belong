@@ -1,0 +1,450 @@
+/* ==========================================================================
+   台北場地 停車位申請 - 明亮溫暖燕麥沙色調 (Warm Sand Beige Light 視覺系統)
+   ========================================================================== */
+
+:root {
+  --bg-dark: #f5f0eb;
+  --panel-bg: #ffffff;
+  --field-bg: #ffffff;
+  --field-hover: #fdfbf7;
+  
+  --border-subtle: #dcd2c4;
+  --border-focus: #c68a2c;
+  
+  --accent-warm: #c68a2c;
+  --accent-hover: #b07820;
+  
+  --text-primary: #2b2621;
+  --text-secondary: #6b5e52;
+  --text-tertiary: #948777;
+  
+  --danger-color: #dc2626;
+  
+  --font-family: 'Plus Jakarta Sans', 'Noto Sans TC', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--bg-dark);
+  color: var(--text-primary);
+  line-height: 1.65;
+  min-height: 100vh;
+  padding: 60px 20px;
+}
+
+/* 主頁面單流排版容器 */
+.page-wrapper {
+  max-width: 660px;
+  margin: 0 auto;
+}
+
+/* 1. 標頭區塊 */
+.header-group {
+  margin-bottom: 48px;
+}
+
+.subtext-badge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent-warm);
+  display: block;
+  margin-bottom: 10px;
+}
+
+.main-heading {
+  font-size: 2.25rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+}
+
+.intro-desc {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+}
+
+/* 2. 申請須知與重點時程 (條列式) */
+.info-notice-section {
+  margin-bottom: 52px;
+  padding-bottom: 36px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.section-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 24px;
+  letter-spacing: -0.01em;
+}
+
+.notice-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.notice-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.list-bullet {
+  color: var(--accent-warm);
+  font-size: 1.1rem;
+  line-height: 1.4;
+}
+
+.list-content {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 16px;
+}
+
+.list-label {
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  min-width: 100px;
+}
+
+.list-text {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+}
+
+.list-text.highlight {
+  color: var(--accent-warm);
+  font-weight: 700;
+}
+
+/* 3. 申請表單區塊 */
+.form-section {
+  margin-bottom: 40px;
+}
+
+.field-row {
+  margin-bottom: 26px;
+}
+
+.field-label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 10px;
+}
+
+.mark {
+  color: var(--danger-color);
+}
+
+.input-control {
+  width: 100%;
+  padding: 14px 16px;
+  background-color: var(--field-bg);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 0.95rem;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.input-control:hover {
+  background-color: var(--field-hover);
+}
+
+.input-control:focus {
+  outline: none;
+  border-color: var(--border-focus);
+  background-color: var(--field-hover);
+  box-shadow: 0 0 0 3px rgba(198, 138, 44, 0.15);
+}
+
+.input-control::placeholder {
+  color: var(--text-tertiary);
+}
+
+/* 車位類型單選選項 (無備註) */
+.choice-group {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.choice-item {
+  position: relative;
+  cursor: pointer;
+}
+
+.choice-item input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+}
+
+.choice-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background-color: var(--field-bg);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.choice-item:hover .choice-label {
+  background-color: var(--field-hover);
+}
+
+.choice-item input[type="radio"]:checked + .choice-label {
+  border-color: var(--accent-warm);
+  background-color: rgba(198, 138, 44, 0.1);
+  color: var(--accent-warm);
+}
+
+/* 提交按鈕『送出申請』 */
+.action-row {
+  margin-top: 36px;
+}
+
+.primary-btn {
+  width: 100%;
+  padding: 16px 24px;
+  background-color: var(--accent-warm);
+  border: none;
+  border-radius: 8px;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.primary-btn:hover {
+  background-color: var(--accent-hover);
+}
+
+.primary-btn:active {
+  transform: translateY(1px);
+}
+
+.primary-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.loader {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  display: none;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* 4. 轉盤 Modal 浮窗 */
+.modal-layer {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(43, 38, 33, 0.6);
+  backdrop-filter: blur(6px);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.modal-layer.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-dialog {
+  background-color: var(--panel-bg);
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  padding: 36px 28px;
+  max-width: 440px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+}
+
+.dialog-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+
+.dialog-subtitle {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+}
+
+/* 轉盤容器與指針 */
+.wheel-stage {
+  position: relative;
+  width: 280px;
+  height: 280px;
+  margin: 0 auto 24px;
+}
+
+.wheel-pointer-icon {
+  position: absolute;
+  bottom: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--accent-warm);
+  font-size: 1.2rem;
+  z-index: 10;
+}
+
+#wheelCanvas {
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  border: 3px solid var(--border-subtle);
+}
+
+.spin-btn {
+  padding: 12px 36px;
+  background-color: var(--accent-warm);
+  border: none;
+  border-radius: 24px;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.spin-btn:hover {
+  background-color: var(--accent-hover);
+}
+
+.spin-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* 結果區塊 */
+.result-box {
+  display: none;
+}
+
+.result-header-text {
+  font-size: 0.85rem;
+  color: var(--text-tertiary);
+  letter-spacing: 0.05em;
+  margin-bottom: 12px;
+}
+
+.result-pill {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--accent-warm);
+  padding: 14px 20px;
+  background-color: rgba(198, 138, 44, 0.1);
+  border-radius: 8px;
+  margin-bottom: 24px;
+  line-height: 1.4;
+}
+
+.warning-note {
+  padding: 16px;
+  background-color: var(--bg-dark);
+  border: 1px dashed var(--border-subtle);
+  border-radius: 8px;
+  margin-bottom: 24px;
+}
+
+.note-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.note-sub {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.close-btn {
+  padding: 10px 24px;
+  background-color: transparent;
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  color: var(--text-secondary);
+  font-family: inherit;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.close-btn:hover {
+  color: var(--text-primary);
+  border-color: var(--text-secondary);
+}
+
+/* Toast 簡潔通知 */
+.toast-popup {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background-color: #2b2621;
+  border: 1px solid var(--border-subtle);
+  color: #f5f0eb;
+  padding: 12px 24px;
+  border-radius: 30px;
+  font-size: 0.9rem;
+  opacity: 0;
+  transition: all 0.3s ease;
+  z-index: 10000;
+}
+
+.toast-popup.active {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+@media (max-width: 600px) {
+  body { padding: 36px 16px; }
+  .choice-group { grid-template-columns: 1fr; }
+  .list-content { flex-direction: column; gap: 2px; }
+}
